@@ -1,0 +1,45 @@
+# netlify.toml
+# Netlify配置文件
+
+[build]
+  # 构建目录
+  publish = "."
+  # 函数目录
+  functions = "netlify/functions"
+  
+  # 构建命令（如果需要）
+  command = "echo 'No build step required'"
+
+[build.environment]
+  # 环境变量设置（在Netlify控制台中设置实际值）
+  NODE_VERSION = "18"
+
+# 重定向规则
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# 头部设置
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+
+# 函数配置
+[functions]
+  directory = "netlify/functions"
+  
+  # 单个函数配置
+  [functions."food-recognition"]
+    timeout = 30
